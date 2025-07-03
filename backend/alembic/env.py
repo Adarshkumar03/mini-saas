@@ -31,7 +31,7 @@ load_dotenv()
 
 # Import Base from your main application file
 # This links Alembic to your SQLAlchemy models
-from main import Base
+from app.database import Base
 from app import models # noqa: F401 - Import models to ensure they are registered with Base
 
 target_metadata = Base.metadata

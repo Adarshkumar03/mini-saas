@@ -2,30 +2,30 @@
 
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from .models import UserRole # Import UserRole Enum
 
 # Pydantic model for creating a new user
-
-
 class UserCreate(BaseModel):
     """
     Schema for user creation.
     Requires an email and a password.
+    Optionally allows setting a role (defaulting to REPORTER).
     """
-    email: EmailStr  # EmailStr provides basic email format validation
+    email: EmailStr # EmailStr provides basic email format validation
     password: str
+    role: Optional[UserRole] = UserRole.REPORTER # Default role is REPORTER
 
 # Pydantic model for displaying user data (e.g., after creation or retrieval)
-
-
 class User(BaseModel):
     """
     Schema for displaying user data.
-    Includes ID, email, and active status.
+    Includes ID, email, active status, and role.
     Note: hashed_password is NOT included for security.
     """
     id: int
     email: EmailStr
     is_active: bool
+    role: UserRole # Include role in the response schema
 
     class Config:
         """
@@ -33,12 +33,10 @@ class User(BaseModel):
         Tells Pydantic to read the data even if it's not a dict,
         but an ORM model (or any other arbitrary object with attributes).
         """
-        orm_mode = True  # Deprecated in Pydantic v2, replaced by from_attributes = True
+        orm_mode = True # Deprecated in Pydantic v2, replaced by from_attributes = True
         # For Pydantic v2, use: from_attributes = True
 
 # Pydantic model for updating user data (optional fields)
-
-
 class UserUpdate(BaseModel):
     """
     Schema for updating user data.
@@ -47,3 +45,4 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
     password: Optional[str] = None
     is_active: Optional[bool] = None
+    role: Optional[UserRole] = None # Allow updating the role
