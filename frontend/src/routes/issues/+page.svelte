@@ -1,16 +1,15 @@
-<!-- frontend/src/routes/issues/+page.svelte -->
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { getIssues } from '$lib/api';
+    import { getIssues } from '$lib/api'; // getIssues is still from api
     import type { Issue, UserRole } from '$lib/types';
-    import { userStore, logout } from '$lib/stores';
+    import { userStore, logout } from '$lib/stores'; // Corrected: logout is from stores
     import { goto } from '$app/navigation';
-    import { browser } from '$app/environment'; // Import 'browser' from SvelteKit's environment module
+    import { browser } from '$app/environment'; // Import browser
 
     let issues: Issue[] = [];
     let errorMessage: string | null = null;
     let isLoading = true;
-    let currentUserRole: UserRole | 'UNKNOWN';
+    let currentUserRole: UserRole; // No longer 'UNKNOWN' as default is REPORTER
 
     // Subscribe to userStore to react to changes in user role/auth status
     userStore.subscribe(user => {
@@ -32,7 +31,7 @@
             console.error('Error fetching issues:', error);
             // If it's an auth error, redirect to login
             if ((error.message.includes('Authentication required') || error.message.includes('Could not validate credentials')) && browser) {
-                logout(); // Clear token and redirect
+                logout(); // Clear token and trigger store update which will redirect
             }
         } finally {
             isLoading = false;
@@ -44,7 +43,7 @@
     });
 
     function handleLogout() {
-        logout();
+        logout(); // This will reset store, and the layout will handle redirection
     }
 
     function navigateToCreateIssue() {
@@ -56,8 +55,7 @@
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Issues List</h1>
         <div class="flex items-center space-x-4">
-            {#if currentUserRole !== 'UNKNOWN'}
-                <span class="text-gray-600">Logged in as: { $userStore.email } ({ currentUserRole })</span>
+            {#if currentUserRole !== 'REPORTER' || $userStore.isAuthenticated} <span class="text-gray-600">Logged in as: { $userStore.email } ({ currentUserRole })</span>
             {/if}
             <button
                 on:click={handleLogout}
@@ -86,7 +84,6 @@
     {:else}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {#each issues as issue (issue.id)}
-                <!-- Changed div to a tag for accessibility -->
                 <a
                     href="/issues/{issue.id}"
                     class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow duration-200"

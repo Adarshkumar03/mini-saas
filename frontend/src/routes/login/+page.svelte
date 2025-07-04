@@ -2,7 +2,7 @@
 <script lang="ts">
     import { login } from '$lib/api';
     import { goto } from '$app/navigation'; // SvelteKit's navigation module
-    import { userStore } from '$lib/stores'; // We'll create this store next
+    import { userStore, initializeUserStore } from '$lib/stores'; // Import initializeUserStore
 
     let email = '';
     let password = '';
@@ -14,11 +14,11 @@
         isLoading = true;
         try {
             const token = await login(email, password);
-            // Optionally fetch user details after login and update store
-            // For now, just set the token and redirect
-            userStore.set({ email: email, isAuthenticated: true, role: 'UNKNOWN' }); // Update store with basic info
-            console.log('Login successful, redirecting...');
-            await goto('/issues'); // Redirect to issues page after successful login (we'll create this route soon)
+            // After successful login, re-initialize the user store
+            // This will fetch the full user details (including role) from the backend
+            await initializeUserStore();
+            console.log('Login successful, user store initialized, redirecting...');
+            await goto('/issues'); // Redirect to issues page after successful login
         } catch (error: any) {
             errorMessage = error.message || 'An unexpected error occurred during login.';
             console.error('Login error:', error);
