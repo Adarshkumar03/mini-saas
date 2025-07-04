@@ -7,14 +7,13 @@ from dotenv import load_dotenv
 # Import database components from our new database module
 from app.database import Base, engine, SessionLocal, get_db
 
-# Import the user router
-from app.routers import users
+# Import the user and issues routers
+from app.routers import users, issues # Added issues router
 
 # Load environment variables from .env file (already done in app.database, but harmless here)
 load_dotenv()
 
 # Import all models to ensure they are registered with SQLAlchemy's Base
-# This import is crucial for Alembic to discover the models.
 from app import models # noqa: F401
 
 # Initialize the FastAPI application
@@ -28,6 +27,9 @@ app = FastAPI(
 
 # Include the user router
 app.include_router(users.router)
+# Include the issues router
+app.include_router(issues.router)
+
 
 # The get_db dependency is now imported from app.database.
 # We keep the @app.get("/api/v1/hello") for now.
