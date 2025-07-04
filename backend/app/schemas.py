@@ -1,8 +1,8 @@
 # backend/app/schemas.py
 
 from pydantic import BaseModel, EmailStr, ConfigDict
-from typing import Optional, List
-from datetime import datetime
+from typing import Optional, List, Dict
+from datetime import datetime, date # Import date for DailyStats schema
 from .models import UserRole, IssueStatus, IssueSeverity # Import new Enums
 
 # Pydantic model for creating a new user
@@ -96,3 +96,22 @@ class Issue(BaseModel):
     class Config:
         model_config = ConfigDict(from_attributes=True)
 
+# Pydantic model for Dashboard data (issue counts by status)
+class DashboardData(BaseModel):
+    """
+    Schema for dashboard data, showing issue counts by status.
+    Example: {"OPEN": 5, "TRIAGED": 2, "IN_PROGRESS": 3, "DONE": 10}
+    """
+    status_counts: Dict[IssueStatus, int] # Dictionary mapping IssueStatus to count
+
+# Pydantic model for DailyStats data
+class DailyStats(BaseModel):
+    """
+    Schema for daily aggregated statistics.
+    """
+    id: int
+    date: date # Use date type for just the date part
+    issue_counts_by_status: Dict[IssueStatus, int]
+
+    class Config:
+        model_config = ConfigDict(from_attributes=True)

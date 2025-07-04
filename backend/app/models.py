@@ -1,6 +1,6 @@
 # backend/app/models.py
 
-from sqlalchemy import Column, Integer, String, Boolean, Enum, ForeignKey, DateTime, Text
+from sqlalchemy import Column, Integer, String, Boolean, Enum, ForeignKey, DateTime, Text, JSON
 from sqlalchemy.orm import relationship
 # Import Base from the new database module
 from .database import Base
@@ -30,7 +30,7 @@ class User(Base):
     role = Column(Enum(UserRole), default=UserRole.REPORTER, nullable=False)
 
     # Relationship to issues created by this user
-    issues = relationship("Issue", back_populates="owner")
+    issues = relationship("Issue", back_populates="owner") # This is correct
 
     def __repr__(self):
         """
@@ -75,6 +75,7 @@ class Issue(Base):
 
     # Foreign key to link to the User who created the issue
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    # CORRECTED: back_populates should refer to the name of the relationship on the User model
     owner = relationship("User", back_populates="issues")
 
     # TODO: Add file_path for optional file upload later
@@ -84,4 +85,18 @@ class Issue(Base):
         String representation of the Issue object.
         """
         return f"<Issue(id={self.id}, title='{self.title}', status='{self.status}', owner_id={self.owner_id})>"
+
+class DailyStats(Base):
+    """
+    SQLAlchemy model for the 'daily_stats' table.
+    Stores aggregated issue counts by status for a given date.
+    """
+    __tablename__ = "daily_stats"
+
+    id = Column(Integer, primary_key=True, index=True)
+    date = Column(DateTime, nullable=False, unique=True) # Date for which stats are aggregated
+    issue_counts_by_status = Column(JSON, nullable=False) # Stores a JSON object of counts by status
+
+    def __repr__(self):
+        return f"<DailyStats(id={self.id}, date='{self.date.strftime('%Y-%m-%d')}', counts={self.issue_counts_by_status})>"
 

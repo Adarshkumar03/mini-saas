@@ -1,10 +1,11 @@
 # backend/app/crud.py
 
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from . import models, schemas
 from passlib.context import CryptContext
-from typing import Optional, List
-from datetime import datetime # Import datetime for setting updated_at
+from typing import Optional, List, Dict
+from datetime import datetime, date # Import date
 
 # Initialize password hashing context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -94,7 +95,7 @@ def create_issue(db: Session, issue: schemas.IssueCreate, owner_id: int) -> mode
     """
     Creates a new issue in the database.
     """
-    db_issue = models.Issue(**issue.model_dump(), owner_id=owner_id) # Use model_dump for Pydantic V2
+    db_issue = models.Issue(**issue.model_dump(), owner_id=owner_id)
     db.add(db_issue)
     db.commit()
     db.refresh(db_issue)
@@ -125,10 +126,10 @@ def update_issue(db: Session, issue_id: int, issue_update: schemas.IssueUpdate) 
     """
     db_issue: Optional[models.Issue] = db.query(models.Issue).filter(models.Issue.id == issue_id).first()
     if db_issue:
-        update_data = issue_update.model_dump(exclude_unset=True) # Get only provided fields
+        update_data = issue_update.model_dump(exclude_unset=True)
         for key, value in update_data.items():
             setattr(db_issue, key, value)
-        db_issue.updated_at = datetime.utcnow() # Update timestamp
+        db_issue.updated_at = datetime.utcnow()
         db.commit()
         db.refresh(db_issue)
     return db_issue
@@ -143,3 +144,43 @@ def delete_issue(db: Session, issue_id: int) -> Optional[dict]:
         db.commit()
         return {"message": "Issue deleted successfully"}
     return None
+
+# --- Dashboard Operations ---
+
+def get_issue_status_counts(db: Session) -> Dict[models.IssueStatus, int]:
+    """
+    Aggregates and returns the count of issues for each status.
+    Initializes counts for all statuses to 0 to ensure all are present.
+    """
+    status_counts = {status: 0 for status in models.IssueStatus}
+    results = db.query(models.Issue.status, func.count(models.Issue.id)).group_by(models.Issue.status).all()
+    for status_enum, count in results:
+        status_counts[status_enum] = count
+    return status_counts
+
+# --- Daily Stats Operations ---
+
+def create_daily_stats(db: Session, stats_date: date, counts: Dict[models.IssueStatus, int]) -> models.DailyStats:
+    """
+    Creates a new daily statistics record.
+    """
+    db_daily_stats = models.DailyStats(
+        date=stats_date,
+        issue_counts_by_status=counts
+    )
+    db.add(db_daily_stats)
+    db.commit()
+    db.refresh(db_daily_stats)
+    return db_daily_stats
+
+def get_daily_stats_by_date(db: Session, stats_date: date) -> Optional[models.DailyStats]:
+    """
+    Retrieves daily statistics for a specific date.
+    """
+    return db.query(models.DailyStats).filter(models.DailyStats.date == stats_date).first()
+
+def get_all_daily_stats(db: Session, skip: int = 0, limit: int = 100) -> List[models.DailyStats]:
+    """
+    Retrieves all daily statistics records with pagination.
+    """
+    return db.query(models.DailyStats).offset(skip).limit(limit).all()
