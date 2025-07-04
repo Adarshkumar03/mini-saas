@@ -4,10 +4,13 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 import os
 from dotenv import load_dotenv
 from typing import List, Dict
-from contextlib import asynccontextmanager # Import for lifespan management
+from contextlib import asynccontextmanager
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler # Import AsyncIOScheduler
-from apscheduler.triggers.interval import IntervalTrigger # Import IntervalTrigger
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+
+# Import CORS middleware
+from fastapi.middleware.cors import CORSMiddleware
 
 # Import database components
 from app.database import Base, engine, SessionLocal, get_db
@@ -19,7 +22,7 @@ from app.routers import users, issues, dashboard
 from app.websockets import manager
 
 # Import background tasks
-from app.tasks import aggregate_daily_issue_stats # Import the background task
+from app.tasks import aggregate_daily_issue_stats
 
 # Load environment variables
 load_dotenv()
@@ -40,8 +43,6 @@ async def lifespan(app: FastAPI):
     # Startup event
     print("Application startup: Starting scheduler...")
     # Schedule the daily stats aggregation job
-    # For testing, you can set a shorter interval (e.g., minutes=1)
-    # For production, set to days=1 or a specific cron schedule
     scheduler.add_job(aggregate_daily_issue_stats, IntervalTrigger(minutes=30), id='daily_issue_stats_job')
     scheduler.start()
     print("Scheduler started.")
@@ -58,8 +59,25 @@ app = FastAPI(
     version="0.1.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
-    lifespan=lifespan # Link the lifespan context manager
+    lifespan=lifespan
 )
+
+# Configure CORS middleware
+# This allows your frontend (e.g., http://localhost:5173) to make requests to your backend
+origins = [
+    "http://localhost",
+    "http://localhost:5173", # Your SvelteKit frontend URL
+    # Add other origins if your frontend will be hosted elsewhere
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins, # List of origins that are allowed to make requests
+    allow_credentials=True, # Allow cookies to be included in cross-origin requests
+    allow_methods=["*"], # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"], # Allow all headers
+)
+
 
 # Include the user router
 app.include_router(users.router)
