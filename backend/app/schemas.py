@@ -46,3 +46,18 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     is_active: Optional[bool] = None
     role: Optional[UserRole] = None # Allow updating the role
+
+# Pydantic model for JWT Token
+class Token(BaseModel):
+    """
+    Schema for the JWT token response.
+    """
+    access_token: str
+    token_type: str = "bearer"
+
+# Pydantic model for data contained within the JWT token
+class TokenData(BaseModel):
+    """
+    Schema for the data extracted from the JWT token payload.
+    """
+    email: Optional[str] = None # Subject of the token, typically user's email
