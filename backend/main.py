@@ -1,6 +1,6 @@
 # backend/main.py
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, Response
 import os
 from dotenv import load_dotenv
 from typing import List, Dict
@@ -11,6 +11,9 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 # Import CORS middleware
 from fastapi.middleware.cors import CORSMiddleware
+
+# Import logging configuration
+from app.logging_config import configure_logging
 
 # Import database components
 from app.database import Base, engine, SessionLocal, get_db
@@ -24,6 +27,10 @@ from app.websockets import manager
 # Import background tasks
 from app.tasks import aggregate_daily_issue_stats
 
+# Python's built-in logging
+import logging
+logger = logging.getLogger(__name__) # Get a logger for this module
+
 # Load environment variables
 load_dotenv()
 
@@ -36,13 +43,11 @@ scheduler = AsyncIOScheduler()
 # Lifespan context manager for FastAPI
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    FastAPI lifespan context manager to handle startup and shutdown events.
-    Used to start and stop the APScheduler.
-    """
+    # Configure logging first
+    configure_logging()
+    
     # Startup event
     print("Application startup: Starting scheduler...")
-    # Schedule the daily stats aggregation job
     scheduler.add_job(aggregate_daily_issue_stats, IntervalTrigger(minutes=30), id='daily_issue_stats_job')
     scheduler.start()
     print("Scheduler started.")
@@ -62,8 +67,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Configure CORS middleware
-# This allows your frontend (e.g., http://localhost:5173) to make requests to your backend
+# --- FIX: Configure CORS middleware FIRST ---
 origins = [
     "http://localhost",
     "http://localhost:5173", # Your SvelteKit frontend URL
@@ -72,11 +76,21 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins, # List of origins that are allowed to make requests
-    allow_credentials=True, # Allow cookies to be included in cross-origin requests
-    allow_methods=["*"], # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
-    allow_headers=["*"], # Allow all headers
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
+# --- END FIX ---
+
+# --- TEMPORARY DEBUGGING MIDDLEWARE (now after CORS middleware) ---
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.info(f"Request: {request.method} {request.url} - Headers: {dict(request.headers)}")
+    response = await call_next(request)
+    logger.info(f"Response: {request.method} {request.url} - Status: {response.status_code} - Headers: {dict(response.headers)}")
+    return response
+# --- END TEMPORARY DEBUGGING MIDDLEWARE ---
 
 
 # Include the user router
@@ -105,8 +119,6 @@ async def websocket_endpoint(websocket: WebSocket):
             await websocket.receive_text() # Keep the connection alive
     except WebSocketDisconnect:
         manager.disconnect(websocket)
-        print("Client disconnected from WebSocket")
-    except Exception as e:
         print(f"WebSocket error: {e}")
         manager.disconnect(websocket)
 

@@ -97,7 +97,7 @@ export async function login(email: string, password: string): Promise<Token> {
 }
 
 export async function register(userData: UserCreate): Promise<any> {
-    return fetchApi('/users/', 'POST', userData, false); // Registration doesn't require auth
+    return fetchApi('/users/', 'POST', userData, false);
 }
 
 // --- User API Calls ---
