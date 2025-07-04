@@ -1,0 +1,44 @@
+# docker/docker-compose.yml
+
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine # Use a specific version of PostgreSQL
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/ # Persist database data
+    environment:
+      POSTGRES_DB: issues_tracker_db # Your database name
+      POSTGRES_USER: adarsh        # Changed to your local user
+      POSTGRES_PASSWORD: AdarshKumar123 # Changed to your local password
+    ports:
+      - "5432:5432" # Expose PostgreSQL port to host for direct access (e.g., pgAdmin)
+    healthcheck: # Health check to ensure DB is ready before app starts
+      test: ["CMD-SHELL", "pg_isready -U adarsh -d issues_tracker_db"] # Updated user for healthcheck
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../backend # Build context is the backend directory
+      dockerfile: Dockerfile # Use the Dockerfile in the backend directory
+    ports:
+      - "8000:8000" # Expose FastAPI port to host
+    environment:
+      # Use 'db' (the service name) instead of 'localhost' for inter-container communication
+      # Updated DATABASE_URL to match your local user and password
+      DATABASE_URL: postgresql://adarsh:AdarshKumar123@db:5432/issues_tracker_db
+      SECRET_KEY: YOUR_SUPER_SECRET_JWT_KEY_CHANGE_THIS_IN_PRODUCTION_AND_MAKE_IT_LONG_AND_RANDOM # Use the same key as in .env
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+    depends_on:
+      db:
+        condition: service_healthy # Ensure DB is healthy before starting backend
+    volumes:
+      - ../backend:/app # Mount the backend code for live reloading during development (optional, but useful)
+    # command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload # Use --reload for development
+    # The CMD in Dockerfile is sufficient for production. For development, uncomment the above line.
+
+volumes:
+  postgres_data: # Define the named volume for PostgreSQL data
