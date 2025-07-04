@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Issue Tracker Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
+        <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">WebSocket Issue Updates</h1>
+        <div class="mb-4">
+            <label for="wsUrl" class="block text-sm font-medium text-gray-700">WebSocket URL:</label>
+            <input type="text" id="wsUrl" value="ws://localhost:8000/ws/issues"
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div class="flex space-x-4 mb-6">
+            <button id="connectBtn" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                Connect
+            </button>
+            <button id="disconnectBtn" class="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" disabled>
+                Disconnect
+            </button>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
+            <h2 class="text-lg font-semibold mb-2 text-gray-800">Messages:</h2>
+            <div id="messages" class="h-64 overflow-y-auto bg-white border border-gray-300 rounded-md p-3 text-sm text-gray-700">
+                <p>No messages yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const wsUrlInput = document.getElementById('wsUrl');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const messagesDiv = document.getElementById('messages');
+        let ws;
+
+        function logMessage(message, type = 'info') {
+            const p = document.createElement('p');
+            p.textContent = message;
+            if (type === 'info') p.className = 'text-blue-600';
+            if (type === 'success') p.className = 'text-green-600';
+            if (type === 'error') p.className = 'text-red-600';
+            if (type === 'data') p.className = 'text-gray-800 break-words'; // For JSON data
+            messagesDiv.appendChild(p);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Auto-scroll to bottom
+        }
+
+        connectBtn.addEventListener('click', () => {
+            const url = wsUrlInput.value;
+            ws = new WebSocket(url);
+
+            ws.onopen = () => {
+                logMessage('Connected to WebSocket.', 'success');
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+            };
+
+            ws.onmessage = (event) => {
+                logMessage('Received:', 'info');
+                try {
+                    const data = JSON.parse(event.data);
+                    logMessage(JSON.stringify(data, null, 2), 'data');
+                } catch (e) {
+                    logMessage(event.data, 'data'); // Fallback if not JSON
+                }
+            };
+
+            ws.onclose = (event) => {
+                logMessage(`Disconnected from WebSocket (Code: ${event.code}, Reason: ${event.reason || 'No reason'}).`, 'error');
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+            };
+
+            ws.onerror = (error) => {
+                logMessage('WebSocket Error: ' + error.message, 'error');
+            };
+        });
+
+        disconnectBtn.addEventListener('click', () => {
+            if (ws) {
+                ws.close();
+            }
+        });
+    </script>
+</body>
+</html>
