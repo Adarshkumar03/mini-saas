@@ -256,7 +256,7 @@
 						></textarea>
 					{:else}
 						<div class="prose max-w-none">
-							{@html renderMarkdown(issue.description)}
+							{renderMarkdown(issue.description)}
 						</div>
 					{/if}
 				</div>
