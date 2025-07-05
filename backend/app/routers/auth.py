@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 import logging
 
-from .. import crud, schemas, models
+from .. import crud, schemas
 from ..database import get_db
 from ..auth import create_access_token
 from ..crud import verify_password

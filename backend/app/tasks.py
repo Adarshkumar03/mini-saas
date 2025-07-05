@@ -1,9 +1,9 @@
 # backend/app/tasks.py
 
-from datetime import datetime, date, timedelta
+from datetime import datetime
 from sqlalchemy.orm import Session
 from .database import SessionLocal # Import SessionLocal to get a new session for the task
-from . import crud, models
+from . import crud
 import logging
 
 # Configure logging for tasks

@@ -9,7 +9,7 @@ import logging # Import logging
 from .. import crud, models, schemas # Relative imports for models, schemas
 from ..crud import verify_password # Import verify_password from crud
 from ..database import get_db # Import get_db dependency
-from ..auth import create_access_token, get_current_user, require_admin, require_maintainer_or_admin, require_reporter_or_higher
+from ..auth import create_access_token, get_current_user, require_admin
 
 logger = logging.getLogger(__name__) # Get logger for this module
 

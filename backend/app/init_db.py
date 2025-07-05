@@ -1,6 +1,4 @@
-from sqlalchemy.orm import Session
 from app.database import Base, engine
-from app.models import User, Issue, DailyStats # Make sure to import all your models
 
 # Import your logging configuration
 import logging

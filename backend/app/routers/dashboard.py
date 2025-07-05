@@ -1,12 +1,11 @@
 # backend/app/routers/dashboard.py
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from typing import Dict
 
 from .. import crud, models, schemas
 from ..database import get_db
-from ..auth import get_current_user, require_admin, require_maintainer_or_admin
+from ..auth import require_maintainer_or_admin
 
 # Create an APIRouter instance for dashboard endpoints
 router = APIRouter(

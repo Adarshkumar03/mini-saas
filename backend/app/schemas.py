@@ -1,7 +1,7 @@
 # backend/app/schemas.py
 
 from pydantic import BaseModel, EmailStr, ConfigDict
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 from datetime import datetime, date # Import date for DailyStats schema
 from .models import UserRole, IssueStatus, IssueSeverity # Import new Enums
 

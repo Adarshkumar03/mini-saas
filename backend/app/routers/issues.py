@@ -2,12 +2,12 @@
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List
 import json
 
 from .. import crud, models, schemas
 from ..database import get_db
-from ..auth import get_current_user, require_admin, require_maintainer_or_admin, require_reporter_or_higher
+from ..auth import get_current_user
 from ..websockets import manager # Import the WebSocket manager from the new websockets module
 
 # Create an APIRouter instance for issue-related endpoints
