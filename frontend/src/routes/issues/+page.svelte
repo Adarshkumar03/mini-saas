@@ -108,7 +108,6 @@
 			</button>
 		{/if}
 	</div>
-	
 
 	{#if isLoading}
 		<p class="text-center text-gray-700">Loading issues...</p>
@@ -141,5 +140,4 @@
 			{/each}
 		</div>
 	{/if}
-	
 </div>
