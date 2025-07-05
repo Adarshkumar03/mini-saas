@@ -3,10 +3,11 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores'; // To get route parameters
 	import { getIssue, updateIssue, deleteIssue } from '$lib/api';
-	import type { Issue, IssueUpdate, IssueSeverity, IssueStatus, UserRole } from '$lib/types';
+	import type { Issue, IssueUpdate, IssueSeverity, IssueStatus} from '$lib/types';
 	import { userStore, logout } from '$lib/stores';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
+	import DOMPurify from 'dompurify'; // For sanitizing HTML (install this: npm install dompurify)
 
 	// Markdown rendering library (install this: npm install marked)
 	import { marked } from 'marked';
@@ -59,13 +60,12 @@
 				editableSeverity = (issue as Issue).severity;
 				editableStatus = (issue as Issue).status;
 			}
-		} catch (error: any) {
-			errorMessage = error.message || 'Failed to fetch issue details.';
+		} catch (error: unknown) {
+			errorMessage = (error as Error).message || 'Failed to fetch issue details.';
 			console.error('Error fetching issue:', error);
 			if (
-				(error.message.includes('Authentication required') ||
-					error.message.includes('Could not validate credentials')) &&
-				browser
+				(error as Error).message.includes('Authentication required') ||
+				(error as Error).message.includes('Could not validate credentials')
 			) {
 				logout(); // Clear token and trigger store update which will redirect
 			}
@@ -101,8 +101,8 @@
 			successMessage = 'Issue updated successfully!';
 			isEditing = false; // Exit edit mode
 			console.log('Issue updated:', updatedIssue);
-		} catch (error: any) {
-			errorMessage = error.message || 'Failed to update issue.';
+		} catch (error: unknown) {
+			errorMessage = (error as Error).message || 'Failed to update issue.';
 			console.error('Error updating issue:', error);
 		} finally {
 			isUpdating = false;
@@ -127,8 +127,8 @@
 			setTimeout(() => {
 				goto('/issues'); // Redirect to issues list after deletion
 			}, 1000);
-		} catch (error: any) {
-			errorMessage = error.message || 'Failed to delete issue.';
+		} catch (error) {
+			errorMessage = (error as Error).message || 'Failed to delete issue.';
 			console.error('Error deleting issue:', error);
 		} finally {
 			isDeleting = false;
@@ -140,8 +140,10 @@
 	const statusOptions: IssueStatus[] = ['OPEN', 'TRIAGED', 'IN_PROGRESS', 'DONE'];
 
 	// Helper to render markdown
-	function renderMarkdown(md: string | undefined) {
-		return md ? marked(md) : '';
+	async function renderMarkdown(md: string | undefined): Promise<string> {
+		if (!md) return '';
+		const rawHtml = await marked.parse(md);
+		return DOMPurify.sanitize(rawHtml);
 	}
 
 	// Determine if the current user can edit the issue using $userStore directly
@@ -258,7 +260,7 @@
 								bind:value={editableSeverity}
 								class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
 							>
-								{#each severityOptions as option}
+								{#each severityOptions as option (option)}
 									<option value={option}>{option}</option>
 								{/each}
 							</select>
@@ -274,7 +276,7 @@
 								bind:value={editableStatus}
 								class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
 							>
-								{#each statusOptions as option}
+								{#each statusOptions as option (option)}
 									<option value={option}>{option}</option>
 								{/each}
 							</select>

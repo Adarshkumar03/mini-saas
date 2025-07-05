@@ -1,6 +1,6 @@
 // frontend/src/lib/api.ts
 
-import type { UserCreate, Token, IssueCreate, IssueUpdate } from './types'; // We'll create types.ts next
+import type { UserCreate, Token, IssueCreate, IssueUpdate, User } from './types'; // We'll create types.ts next
 
 // Base URL for your FastAPI backend
 // When running locally with Docker Compose, this will be localhost:8000

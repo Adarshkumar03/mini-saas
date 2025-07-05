@@ -2,7 +2,7 @@
 <script lang="ts">
 	import { login } from '$lib/api';
 	import { goto } from '$app/navigation'; // SvelteKit's navigation module
-	import { userStore, initializeUserStore } from '$lib/stores'; // Import initializeUserStore
+	import { initializeUserStore } from '$lib/stores'; // Import initializeUserStore
 
 	let email = '';
 	let password = '';
@@ -13,14 +13,13 @@
 		errorMessage = null; // Clear previous errors
 		isLoading = true;
 		try {
-			const token = await login(email, password);
 			// After successful login, re-initialize the user store
 			// This will fetch the full user details (including role) from the backend
 			await initializeUserStore();
 			console.log('Login successful, user store initialized, redirecting...');
 			await goto('/issues'); // Redirect to issues page after successful login
 		} catch (error: any) {
-			errorMessage = error.message || 'An unexpected error occurred during login.';
+			errorMessage = (error as Error).message || 'An unexpected error occurred during login.';
 			console.error('Login error:', error);
 		} finally {
 			isLoading = false;

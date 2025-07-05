@@ -1,7 +1,7 @@
 <!-- frontend/src/routes/register/+page.svelte -->
 <script lang="ts">
 	import { register } from '$lib/api';
-	import type { UserCreate, UserRole } from '$lib/types'; // Import UserRole type
+	import type { UserCreate, UserRole, User } from '$lib/types'; // Import UserRole type
 	import { goto } from '$app/navigation';
 	import { userStore } from '$lib/stores'; // To check if already logged in
 	import { onMount } from 'svelte';
@@ -45,14 +45,14 @@
 
 		try {
 			const registeredUser = await register(newUserData);
-			successMessage = `Registration successful for ${registeredUser.email}! You can now log in.`;
+			successMessage = `Registration successful for ${(registeredUser as User).email}! You can now log in.`;
 			console.log('User registered:', registeredUser);
 			// Optionally, redirect to login page after a short delay
 			setTimeout(() => {
 				goto('/login');
 			}, 2000);
 		} catch (error: any) {
-			errorMessage = error.message || 'An unexpected error occurred during registration.';
+			errorMessage = (error as Error).message || 'An unexpected error occurred during registration.';
 			console.error('Registration error:', error);
 		} finally {
 			isLoading = false;
@@ -113,7 +113,7 @@
 					bind:value={role}
 					class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
 				>
-					{#each roleOptions as option}
+					{#each roleOptions as option (option)}
 						<option value={option}>{option}</option>
 					{/each}
 				</select>
