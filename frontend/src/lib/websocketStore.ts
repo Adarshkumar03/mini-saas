@@ -26,7 +26,7 @@ export function connectWebSocket() {
 			const data = JSON.parse(event.data);
 			console.log('WebSocket message received:', data);
 			lastMessage.set(data); // Update the store with the new message
-		} catch{
+		} catch {
 			console.error('Failed to parse WebSocket message:', event.data);
 		}
 	};
