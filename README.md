@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/github/license/Adarshkumar03/mini-saas.svg)](LICENSE)
 [![Stack](https://img.shields.io/badge/stack-FastAPI%20%7C%20SvelteKit%20%7C%20PostgreSQL-blueviolet)](#)
 
-A lightweight SaaS portal for DeepLogic AI clients to submit feedback (bugs, invoices, files) and convert it into structured data for insights.
+A lightweight SaaS portal for clients to submit feedback (bugs, invoices, files) and convert it into structured data for insights.
 
 ---
 
