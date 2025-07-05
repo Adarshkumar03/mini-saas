@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores'; // To get route parameters
 	import { getIssue, updateIssue, deleteIssue } from '$lib/api';
-	import type { Issue, IssueUpdate, IssueSeverity, IssueStatus} from '$lib/types';
+	import type { Issue, IssueUpdate, IssueSeverity, IssueStatus } from '$lib/types';
 	import { userStore, logout } from '$lib/stores';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';

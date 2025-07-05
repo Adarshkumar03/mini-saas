@@ -52,7 +52,8 @@
 				goto('/login');
 			}, 2000);
 		} catch (error: any) {
-			errorMessage = (error as Error).message || 'An unexpected error occurred during registration.';
+			errorMessage =
+				(error as Error).message || 'An unexpected error occurred during registration.';
 			console.error('Registration error:', error);
 		} finally {
 			isLoading = false;
