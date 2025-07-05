@@ -22,8 +22,8 @@
 	let chartInstance: Chart | null = null; // Store the Chart.js instance
 
 	// Chart data structure (will be populated dynamically)
-	let chartConfig = {
-		type: 'bar', // Type of chart
+	let chartConfig: import('chart.js').ChartConfiguration<'bar', number[], string> = {
+		type: 'bar', // Type of chart as string literal
 		data: {
 			labels: [] as string[],
 			datasets: [
@@ -87,10 +87,12 @@
 			console.log('Dashboard data fetched from API:', dashboardData); // Debugging log
 
 			// Update chart data
-			chartConfig.data.labels = Object.keys(dashboardData.status_counts) as IssueStatus[];
-			chartConfig.data.datasets[0].data = Object.values(dashboardData.status_counts);
-			console.log('Chart labels prepared:', chartConfig.data.labels); // Debugging log
-			console.log('Chart data prepared:', chartConfig.data.datasets[0].data); // Debugging log
+			if (dashboardData && dashboardData.status_counts) {
+				chartConfig.data.labels = Object.keys(dashboardData.status_counts) as IssueStatus[];
+				chartConfig.data.datasets[0].data = Object.values(dashboardData.status_counts);
+				console.log('Chart labels prepared:', chartConfig.data.labels); // Debugging log
+				console.log('Chart data prepared:', chartConfig.data.datasets[0].data); // Debugging log
+			}
 		} catch (error: any) {
 			errorMessage = error.message || 'Failed to fetch dashboard data.';
 			console.error('Error fetching dashboard data:', error);

@@ -3,7 +3,7 @@
 import { writable } from 'svelte/store';
 
 // This store will hold the last message received from the WebSocket
-export const lastMessage = writable<any>(null);
+export const lastMessage = writable<unknown>(null);
 
 let ws: WebSocket | null = null;
 
@@ -26,7 +26,7 @@ export function connectWebSocket() {
 			const data = JSON.parse(event.data);
 			console.log('WebSocket message received:', data);
 			lastMessage.set(data); // Update the store with the new message
-		} catch (e) {
+		} catch{
 			console.error('Failed to parse WebSocket message:', event.data);
 		}
 	};

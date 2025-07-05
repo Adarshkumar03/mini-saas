@@ -53,10 +53,12 @@
 			const fetchedIssue = await getIssue(issueId);
 			issue = fetchedIssue;
 			// Initialize editable fields with current issue data
-			editableTitle = issue.title;
-			editableDescription = issue.description || '';
-			editableSeverity = issue.severity;
-			editableStatus = issue.status;
+			if (issue) {
+				editableTitle = issue.title;
+				editableDescription = issue.description || '';
+				editableSeverity = issue.severity;
+				editableStatus = issue.status;
+			}
 		} catch (error: any) {
 			errorMessage = error.message || 'Failed to fetch issue details.';
 			console.error('Error fetching issue:', error);
