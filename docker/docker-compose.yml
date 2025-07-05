@@ -29,7 +29,7 @@ services:
       # Use 'db' (the service name) instead of 'localhost' for inter-container communication
       # Updated DATABASE_URL to match your local user and password
       DATABASE_URL: postgresql://adarsh:AdarshKumar123@db:5432/issues_tracker_db
-      SECRET_KEY: YOUR_SUPER_SECRET_JWT_KEY_CHANGE_THIS_IN_PRODUCTION_AND_MAKE_IT_LONG_AND_RANDOM # Use the same key as in .env
+      SECRET_KEY: 500a7b877765dd305eb5e76ff7449c335cd814da5164cb058fbbb1a66e6cac9d # Use the same key as in .env
       ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
     depends_on:
