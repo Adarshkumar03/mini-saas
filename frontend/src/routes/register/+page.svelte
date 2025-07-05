@@ -51,7 +51,7 @@
 			setTimeout(() => {
 				goto('/login');
 			}, 2000);
-		} catch (error: any) {
+		} catch (error: unknown) {
 			errorMessage =
 				(error as Error).message || 'An unexpected error occurred during registration.';
 			console.error('Registration error:', error);

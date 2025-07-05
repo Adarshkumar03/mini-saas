@@ -1,7 +1,7 @@
 <!-- frontend/src/routes/issues/new/+page.svelte -->
 <script lang="ts">
 	import { createIssue } from '$lib/api';
-	import type { IssueCreate, IssueSeverity } from '$lib/types';
+	import type { Issue, IssueCreate, IssueSeverity } from '$lib/types';
 	import { goto } from '$app/navigation';
 	import { userStore } from '$lib/stores'; // To check user role for display
 	import { onMount } from 'svelte';
@@ -35,14 +35,14 @@
 
 		try {
 			const createdIssue = await createIssue(newIssue);
-			successMessage = `Issue "${createdIssue.title}" created successfully!`;
+			successMessage = `Issue "${(createdIssue as Issue).title}" created successfully!`;
 			console.log('Issue created:', createdIssue);
 			// Optionally, clear form or redirect after a short delay
 			setTimeout(() => {
 				goto('/issues'); // Redirect back to the issues list
 			}, 1500);
-		} catch (error: any) {
-			errorMessage = error.message || 'Failed to create issue.';
+		} catch (error: unknown) {
+			errorMessage = (error as Error).message || 'Failed to create issue.';
 			console.error('Error creating issue:', error);
 		} finally {
 			isLoading = false;
@@ -90,7 +90,7 @@
 					bind:value={severity}
 					class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
 				>
-					{#each severityOptions as option}
+					{#each severityOptions as option (option)}
 						<option value={option}>{option}</option>
 					{/each}
 				</select>

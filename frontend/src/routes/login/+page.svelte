@@ -1,6 +1,5 @@
 <!-- frontend/src/routes/login/+page.svelte -->
 <script lang="ts">
-	import { login } from '$lib/api';
 	import { goto } from '$app/navigation'; // SvelteKit's navigation module
 	import { initializeUserStore } from '$lib/stores'; // Import initializeUserStore
 
@@ -18,7 +17,7 @@
 			await initializeUserStore();
 			console.log('Login successful, user store initialized, redirecting...');
 			await goto('/issues'); // Redirect to issues page after successful login
-		} catch (error: any) {
+		} catch (error: unknown) {
 			errorMessage = (error as Error).message || 'An unexpected error occurred during login.';
 			console.error('Login error:', error);
 		} finally {

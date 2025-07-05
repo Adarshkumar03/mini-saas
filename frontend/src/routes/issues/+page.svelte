@@ -30,7 +30,7 @@
 			const fetchedIssues = (await getIssues()) as Issue[]; // Ensure we type the response correctly
 			issues = fetchedIssues;
 		} catch (error: any) {
-			errorMessage = error.message || 'Failed to fetch issues.';
+			errorMessage = (error as Error).message || 'Failed to fetch issues.';
 			console.error('Error fetching issues:', error);
 			// If it's an auth error, redirect to login
 			if (

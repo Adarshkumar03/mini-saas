@@ -93,14 +93,13 @@
 				console.log('Chart labels prepared:', chartConfig.data.labels); // Debugging log
 				console.log('Chart data prepared:', chartConfig.data.datasets[0].data); // Debugging log
 			}
-		} catch (error: any) {
-			errorMessage = error.message || 'Failed to fetch dashboard data.';
+		} catch (error: unknown) {
+			errorMessage = (error as Error).message || 'Failed to fetch dashboard data.';
 			console.error('Error fetching dashboard data:', error);
 			if (
-				(error.message.includes('Authentication required') ||
-					error.message.includes('Could not validate credentials') ||
-					error.message.includes('Not enough permissions')) &&
-				browser
+				(error as Error).message.includes('Authentication required') ||
+				(error as Error).message.includes('Could not validate credentials') ||
+				(error as Error).message.includes('Not enough permissions')
 			) {
 				logout(); // Clear token and redirect if auth/permission error
 			}
