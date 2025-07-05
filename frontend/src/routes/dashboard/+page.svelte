@@ -145,7 +145,8 @@
 		<div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
 			{#if currentUserRole}
 				<span class="text-sm sm:text-base text-gray-600">
-					Logged in as: <span class="font-medium text-gray-800">{$userStore.email}</span> ({currentUserRole})
+					Logged in as: <span class="font-medium text-gray-800">{$userStore.email}</span>
+					({currentUserRole})
 				</span>
 			{/if}
 			<button
@@ -171,17 +172,16 @@
 	<!-- State Handling -->
 	{#if isLoading}
 		<p class="text-center text-gray-700 text-base">Loading dashboard data...</p>
-
 	{:else if errorMessage}
 		<p class="text-center text-red-600 text-base">{errorMessage}</p>
-
 	{:else if !dashboardData || Object.keys(dashboardData.status_counts).length === 0}
 		<p class="text-center text-gray-700 text-base">No dashboard data available.</p>
-
 	{:else}
 		<!-- Chart Card -->
 		<div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-4xl mx-auto">
-			<h2 class="text-xl sm:text-2xl font-semibold text-center text-gray-800 mb-6">Issue Status Breakdown</h2>
+			<h2 class="text-xl sm:text-2xl font-semibold text-center text-gray-800 mb-6">
+				Issue Status Breakdown
+			</h2>
 
 			<div class="relative h-72 sm:h-96">
 				<canvas bind:this={chartCanvas}></canvas>
@@ -189,4 +189,3 @@
 		</div>
 	{/if}
 </div>
-

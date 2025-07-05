@@ -176,17 +176,16 @@
 	<!-- States -->
 	{#if isLoading}
 		<p class="text-center text-gray-700 text-base">Loading issue details...</p>
-
 	{:else if errorMessage}
 		<p class="text-center text-red-600 text-base">{errorMessage}</p>
-
 	{:else if !issue}
 		<p class="text-center text-gray-700 text-base">Issue not found.</p>
-
 	{:else}
 		<div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-5xl mx-auto">
 			<!-- Title & Buttons -->
-			<div class="flex flex-col-reverse sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+			<div
+				class="flex flex-col-reverse sm:flex-row justify-between items-start sm:items-center gap-4 mb-6"
+			>
 				{#if isEditing}
 					<input
 						type="text"
@@ -300,11 +299,18 @@
 				<!-- Meta Info -->
 				<div class="text-sm text-gray-600 pt-4 border-t border-gray-200">
 					<p>Created by: <span class="font-medium text-gray-800">{issue.owner_id}</span></p>
-					<p>Created at: <span class="font-medium text-gray-800">{new Date(issue.created_at).toLocaleString()}</span></p>
-					<p>Last updated: <span class="font-medium text-gray-800">{new Date(issue.updated_at).toLocaleString()}</span></p>
+					<p>
+						Created at: <span class="font-medium text-gray-800"
+							>{new Date(issue.created_at).toLocaleString()}</span
+						>
+					</p>
+					<p>
+						Last updated: <span class="font-medium text-gray-800"
+							>{new Date(issue.updated_at).toLocaleString()}</span
+						>
+					</p>
 				</div>
 			</div>
 		</div>
 	{/if}
 </div>
-

@@ -47,8 +47,9 @@
 
 			<!-- Message -->
 			<p class="text-lg font-medium text-gray-700">Loading application...</p>
-			<p class="text-sm text-gray-500 mt-1">Please wait a moment while we prepare everything for you.</p>
+			<p class="text-sm text-gray-500 mt-1">
+				Please wait a moment while we prepare everything for you.
+			</p>
 		</div>
 	{/if}
 </div>
-

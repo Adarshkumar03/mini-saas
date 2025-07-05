@@ -84,7 +84,8 @@
 		<div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
 			{#if currentUserRole !== 'REPORTER' || $userStore.isAuthenticated}
 				<span class="text-sm sm:text-base text-gray-600 text-wrap">
-					Logged in as: <span class="font-medium text-gray-800">{$userStore.email}</span> ({currentUserRole})
+					Logged in as: <span class="font-medium text-gray-800">{$userStore.email}</span>
+					({currentUserRole})
 				</span>
 			{/if}
 
@@ -119,13 +120,10 @@
 	<!-- State Handling -->
 	{#if isLoading}
 		<p class="text-center text-gray-700 text-base">Loading issues...</p>
-
 	{:else if errorMessage}
 		<p class="text-center text-red-600 text-base">{errorMessage}</p>
-
 	{:else if issues.length === 0}
 		<p class="text-center text-gray-700 text-base">No issues found. Create one!</p>
-
 	{:else}
 		<!-- Issues Grid -->
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -138,15 +136,18 @@
 					<h2 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{issue.title}</h2>
 
 					<p class="text-sm text-gray-600 mb-1">
-						<strong class="text-gray-800">Status:</strong> <span class="text-blue-700 font-medium">{issue.status}</span>
+						<strong class="text-gray-800">Status:</strong>
+						<span class="text-blue-700 font-medium">{issue.status}</span>
 					</p>
 
 					<p class="text-sm text-gray-600 mb-1">
-						<strong class="text-gray-800">Severity:</strong> <span class="text-yellow-700 font-medium">{issue.severity}</span>
+						<strong class="text-gray-800">Severity:</strong>
+						<span class="text-yellow-700 font-medium">{issue.severity}</span>
 					</p>
 
 					<p class="text-sm text-gray-600 mb-1">
-						<strong class="text-gray-800">Created by:</strong> {issue.owner_id}
+						<strong class="text-gray-800">Created by:</strong>
+						{issue.owner_id}
 					</p>
 
 					<p class="text-xs text-gray-500">
@@ -157,4 +158,3 @@
 		</div>
 	{/if}
 </div>
-

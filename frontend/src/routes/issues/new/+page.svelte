@@ -53,7 +53,9 @@
 	const severityOptions: IssueSeverity[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-gray-100 px-4 py-8">
+<div
+	class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-gray-100 px-4 py-8"
+>
 	<div class="bg-white w-full max-w-2xl p-6 sm:p-8 rounded-2xl shadow-xl">
 		<h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 mb-8">
 			Create New Issue
@@ -75,7 +77,9 @@
 
 			<!-- Description -->
 			<div>
-				<label for="description" class="block text-sm font-semibold text-gray-700 mb-1">Description (Markdown supported)</label>
+				<label for="description" class="block text-sm font-semibold text-gray-700 mb-1"
+					>Description (Markdown supported)</label
+				>
 				<textarea
 					id="description"
 					bind:value={description}
@@ -87,7 +91,8 @@
 
 			<!-- Severity -->
 			<div>
-				<label for="severity" class="block text-sm font-semibold text-gray-700 mb-1">Severity</label>
+				<label for="severity" class="block text-sm font-semibold text-gray-700 mb-1">Severity</label
+				>
 				<select
 					id="severity"
 					bind:value={severity}
@@ -122,9 +127,25 @@
 					disabled={isLoading}
 				>
 					{#if isLoading}
-						<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-							<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+						<svg
+							class="animate-spin h-5 w-5 text-white"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<circle
+								class="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								stroke-width="4"
+							/>
+							<path
+								class="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+							/>
 						</svg>
 						Creating...
 					{:else}
@@ -135,4 +156,3 @@
 		</form>
 	</div>
 </div>
-

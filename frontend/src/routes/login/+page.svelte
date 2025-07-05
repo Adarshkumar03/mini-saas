@@ -26,7 +26,9 @@
 	}
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-gray-100 px-4 py-8">
+<div
+	class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-gray-100 px-4 py-8"
+>
 	<div class="bg-white w-full max-w-md sm:max-w-lg p-6 sm:p-8 rounded-2xl shadow-xl">
 		<h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 mb-6">
 			Login to Issues & Insights
@@ -34,7 +36,9 @@
 
 		<form on:submit|preventDefault={handleSubmit} class="space-y-5 sm:space-y-6">
 			<div>
-				<label for="email" class="block text-sm font-semibold text-gray-700 mb-1">Email address</label>
+				<label for="email" class="block text-sm font-semibold text-gray-700 mb-1"
+					>Email address</label
+				>
 				<input
 					type="email"
 					id="email"
@@ -46,7 +50,8 @@
 			</div>
 
 			<div>
-				<label for="password" class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+				<label for="password" class="block text-sm font-semibold text-gray-700 mb-1">Password</label
+				>
 				<input
 					type="password"
 					id="password"
@@ -68,9 +73,25 @@
 					disabled={isLoading}
 				>
 					{#if isLoading}
-						<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-							<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+						<svg
+							class="animate-spin h-5 w-5 text-white"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<circle
+								class="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								stroke-width="4"
+							/>
+							<path
+								class="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+							/>
 						</svg>
 						Logging in...
 					{:else}
@@ -82,8 +103,9 @@
 
 		<p class="mt-6 text-center text-sm text-gray-600">
 			Don’t have an account?
-			<a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500 transition">Register here</a>
+			<a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500 transition"
+				>Register here</a
+			>
 		</p>
 	</div>
 </div>
-
