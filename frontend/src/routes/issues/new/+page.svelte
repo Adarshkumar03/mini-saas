@@ -53,42 +53,45 @@
 	const severityOptions: IssueSeverity[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-	<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-		<h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Create New Issue</h1>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-gray-100 px-4 py-8">
+	<div class="bg-white w-full max-w-2xl p-6 sm:p-8 rounded-2xl shadow-xl">
+		<h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 mb-8">
+			Create New Issue
+		</h1>
 
-		<form on:submit|preventDefault={handleSubmit} class="space-y-6">
+		<form on:submit|preventDefault={handleSubmit} class="space-y-5 sm:space-y-6">
+			<!-- Title -->
 			<div>
-				<label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+				<label for="title" class="block text-sm font-semibold text-gray-700 mb-1">Title</label>
 				<input
 					type="text"
 					id="title"
 					bind:value={title}
 					required
-					class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+					class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
 					placeholder="Brief summary of the issue"
 				/>
 			</div>
 
+			<!-- Description -->
 			<div>
-				<label for="description" class="block text-sm font-medium text-gray-700 mb-1"
-					>Description (Markdown supported)</label
-				>
+				<label for="description" class="block text-sm font-semibold text-gray-700 mb-1">Description (Markdown supported)</label>
 				<textarea
 					id="description"
 					bind:value={description}
 					rows="5"
-					class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+					class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
 					placeholder="Detailed description of the issue, steps to reproduce, etc."
 				></textarea>
 			</div>
 
+			<!-- Severity -->
 			<div>
-				<label for="severity" class="block text-sm font-medium text-gray-700 mb-1">Severity</label>
+				<label for="severity" class="block text-sm font-semibold text-gray-700 mb-1">Severity</label>
 				<select
 					id="severity"
 					bind:value={severity}
-					class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+					class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white"
 				>
 					{#each severityOptions as option (option)}
 						<option value={option}>{option}</option>
@@ -96,6 +99,7 @@
 				</select>
 			</div>
 
+			<!-- Messages -->
 			{#if errorMessage}
 				<p class="text-red-600 text-sm text-center">{errorMessage}</p>
 			{/if}
@@ -103,20 +107,25 @@
 				<p class="text-green-600 text-sm text-center">{successMessage}</p>
 			{/if}
 
-			<div class="flex justify-end space-x-4">
+			<!-- Actions -->
+			<div class="flex flex-col sm:flex-row justify-end gap-4 pt-2">
 				<button
 					type="button"
 					on:click={() => goto('/issues')}
-					class="inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+					class="w-full sm:w-auto inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 				>
 					Cancel
 				</button>
 				<button
 					type="submit"
-					class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+					class="w-full sm:w-auto inline-flex justify-center items-center gap-2 py-2 px-4 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
 					disabled={isLoading}
 				>
 					{#if isLoading}
+						<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+							<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+							<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+						</svg>
 						Creating...
 					{:else}
 						Create Issue
@@ -126,3 +135,4 @@
 		</form>
 	</div>
 </div>
+

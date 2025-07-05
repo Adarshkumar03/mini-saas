@@ -161,65 +161,73 @@
 	$: canDelete = $userStore.role === 'ADMIN';
 </script>
 
-<div class="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
-	<div class="flex justify-between items-center mb-6">
-		<h1 class="text-3xl font-bold text-gray-800">Issue Details</h1>
+<div class="min-h-screen bg-gradient-to-br from-indigo-50 to-gray-100 p-4 sm:p-6 lg:p-10">
+	<!-- Header -->
+	<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+		<h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Issue Details</h1>
 		<button
 			on:click={() => goto('/issues')}
-			class="bg-gray-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+			class="bg-gray-600 text-white py-2 px-4 rounded-lg shadow hover:bg-gray-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
 		>
 			Back to Issues
 		</button>
 	</div>
 
+	<!-- States -->
 	{#if isLoading}
-		<p class="text-center text-gray-700">Loading issue details...</p>
+		<p class="text-center text-gray-700 text-base">Loading issue details...</p>
+
 	{:else if errorMessage}
-		<p class="text-red-600 text-center">{errorMessage}</p>
+		<p class="text-center text-red-600 text-base">{errorMessage}</p>
+
 	{:else if !issue}
-		<p class="text-center text-gray-700">Issue not found.</p>
+		<p class="text-center text-gray-700 text-base">Issue not found.</p>
+
 	{:else}
-		<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl mx-auto">
-			<div class="flex justify-between items-start mb-6">
+		<div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-5xl mx-auto">
+			<!-- Title & Buttons -->
+			<div class="flex flex-col-reverse sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
 				{#if isEditing}
 					<input
 						type="text"
 						bind:value={editableTitle}
-						class="text-3xl font-bold text-gray-800 w-full p-2 border border-gray-300 rounded-md"
+						class="text-2xl sm:text-3xl font-bold text-gray-800 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
 					/>
 				{:else}
-					<h2 class="text-3xl font-bold text-gray-800">{issue.title}</h2>
+					<h2 class="text-2xl sm:text-3xl font-bold text-gray-800">{issue.title}</h2>
 				{/if}
 
-				<div class="flex space-x-2 ml-4">
+				<!-- Button Controls -->
+				<div class="flex flex-wrap gap-2">
 					{#if canEdit}
 						{#if isEditing}
 							<button
 								on:click={handleUpdate}
-								class="bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+								class="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
 								disabled={isUpdating}
 							>
 								{isUpdating ? 'Saving...' : 'Save'}
 							</button>
 							<button
 								on:click={() => (isEditing = false)}
-								class="bg-gray-400 text-white py-2 px-4 rounded-md shadow-sm hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+								class="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
 							>
 								Cancel
 							</button>
 						{:else}
 							<button
 								on:click={() => (isEditing = true)}
-								class="bg-blue-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+								class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
 							>
 								Edit
 							</button>
 						{/if}
 					{/if}
+
 					{#if canDelete}
 						<button
 							on:click={handleDelete}
-							class="bg-red-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
+							class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
 							disabled={isDeleting}
 						>
 							{isDeleting ? 'Deleting...' : 'Delete'}
@@ -228,6 +236,7 @@
 				</div>
 			</div>
 
+			<!-- Status messages -->
 			{#if successMessage}
 				<p class="text-green-600 text-sm text-center mb-4">{successMessage}</p>
 			{/if}
@@ -235,71 +244,67 @@
 				<p class="text-red-600 text-sm text-center mb-4">{errorMessage}</p>
 			{/if}
 
-			<div class="space-y-4">
+			<!-- Issue Content -->
+			<div class="space-y-6 text-sm sm:text-base">
+				<!-- Description -->
 				<div>
-					<p class="text-sm font-medium text-gray-700">Description:</p>
+					<p class="text-sm font-medium text-gray-700 mb-1">Description:</p>
 					{#if isEditing}
 						<textarea
 							bind:value={editableDescription}
 							rows="8"
-							class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+							class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
 						></textarea>
 					{:else}
-						<!-- Render Markdown content safely -->
 						<div class="prose max-w-none">
-							{renderMarkdown(issue.description)}
+							{@html renderMarkdown(issue.description)}
 						</div>
 					{/if}
 				</div>
 
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<!-- Severity & Status -->
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
-						<p class="text-sm font-medium text-gray-700">Severity:</p>
+						<p class="text-sm font-medium text-gray-700 mb-1">Severity:</p>
 						{#if isEditing && canChangeStatusSeverity}
 							<select
 								bind:value={editableSeverity}
-								class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+								class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
 							>
 								{#each severityOptions as option (option)}
 									<option value={option}>{option}</option>
 								{/each}
 							</select>
 						{:else}
-							<p class="text-lg font-semibold text-yellow-700">{issue.severity}</p>
+							<p class="text-base font-semibold text-yellow-700">{issue.severity}</p>
 						{/if}
 					</div>
 
 					<div>
-						<p class="text-sm font-medium text-gray-700">Status:</p>
+						<p class="text-sm font-medium text-gray-700 mb-1">Status:</p>
 						{#if isEditing && canChangeStatusSeverity}
 							<select
 								bind:value={editableStatus}
-								class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+								class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
 							>
 								{#each statusOptions as option (option)}
 									<option value={option}>{option}</option>
 								{/each}
 							</select>
 						{:else}
-							<p class="text-lg font-semibold text-blue-700">{issue.status}</p>
+							<p class="text-base font-semibold text-blue-700">{issue.status}</p>
 						{/if}
 					</div>
 				</div>
 
-				<div class="text-sm text-gray-600">
+				<!-- Meta Info -->
+				<div class="text-sm text-gray-600 pt-4 border-t border-gray-200">
 					<p>Created by: <span class="font-medium text-gray-800">{issue.owner_id}</span></p>
-					<p>
-						Created at: <span class="font-medium text-gray-800"
-							>{new Date(issue.created_at).toLocaleString()}</span
-						>
-					</p>
-					<p>
-						Last updated: <span class="font-medium text-gray-800"
-							>{new Date(issue.updated_at).toLocaleString()}</span
-						>
-					</p>
+					<p>Created at: <span class="font-medium text-gray-800">{new Date(issue.created_at).toLocaleString()}</span></p>
+					<p>Last updated: <span class="font-medium text-gray-800">{new Date(issue.updated_at).toLocaleString()}</span></p>
 				</div>
 			</div>
 		</div>
 	{/if}
 </div>
+

@@ -137,46 +137,56 @@
 	}
 </script>
 
-<div class="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
-	<div class="flex justify-between items-center mb-6">
-		<h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
-		<div class="flex items-center space-x-4">
+<div class="min-h-screen bg-gradient-to-br from-indigo-50 to-gray-100 p-4 sm:p-6 lg:p-10">
+	<!-- Header -->
+	<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+		<h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Dashboard</h1>
+
+		<div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
 			{#if currentUserRole}
-				<span class="text-gray-600">Logged in as: {$userStore.email} ({currentUserRole})</span>
+				<span class="text-sm sm:text-base text-gray-600">
+					Logged in as: <span class="font-medium text-gray-800">{$userStore.email}</span> ({currentUserRole})
+				</span>
 			{/if}
 			<button
 				on:click={handleLogout}
-				class="bg-red-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+				class="bg-red-600 text-white py-2 px-4 rounded-lg shadow hover:bg-red-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
 			>
 				Logout
 			</button>
 		</div>
 	</div>
 
-	<div class="flex justify-start mb-6 space-x-4">
+	<!-- Navigation -->
+	<div class="flex flex-wrap gap-3 mb-8">
 		<a
 			href="/issues"
-			class="bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+			class="bg-indigo-600 text-white py-2 px-4 rounded-lg shadow hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 		>
 			View Issues
 		</a>
-		<!-- Add other navigation links here if needed -->
+		<!-- Add more navigation links here if needed -->
 	</div>
 
+	<!-- State Handling -->
 	{#if isLoading}
-		<p class="text-center text-gray-700">Loading dashboard data...</p>
+		<p class="text-center text-gray-700 text-base">Loading dashboard data...</p>
+
 	{:else if errorMessage}
-		<p class="text-red-600 text-center">{errorMessage}</p>
+		<p class="text-center text-red-600 text-base">{errorMessage}</p>
+
 	{:else if !dashboardData || Object.keys(dashboardData.status_counts).length === 0}
-		<p class="text-center text-gray-700">No dashboard data available.</p>
+		<p class="text-center text-gray-700 text-base">No dashboard data available.</p>
+
 	{:else}
-		<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl mx-auto">
-			<h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Issue Status Breakdown</h2>
-			<div class="relative h-96">
-				<!-- Fixed height for chart -->
+		<!-- Chart Card -->
+		<div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-4xl mx-auto">
+			<h2 class="text-xl sm:text-2xl font-semibold text-center text-gray-800 mb-6">Issue Status Breakdown</h2>
+
+			<div class="relative h-72 sm:h-96">
 				<canvas bind:this={chartCanvas}></canvas>
-				<!-- Bind canvas element -->
 			</div>
 		</div>
 	{/if}
 </div>
+

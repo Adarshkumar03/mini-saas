@@ -76,68 +76,85 @@
 	}
 </script>
 
-<div class="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
-	<div class="flex justify-between items-center mb-6">
-		<h1 class="text-3xl font-bold text-gray-800">Issues List</h1>
-		<div class="flex items-center space-x-4">
+<div class="min-h-screen bg-gradient-to-br from-indigo-50 to-gray-100 p-4 sm:p-6 lg:p-10">
+	<!-- Header -->
+	<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+		<h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Issues List</h1>
+
+		<div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
 			{#if currentUserRole !== 'REPORTER' || $userStore.isAuthenticated}
-				<span class="text-gray-600">Logged in as: {$userStore.email} ({currentUserRole})</span>
+				<span class="text-sm sm:text-base text-gray-600 text-wrap">
+					Logged in as: <span class="font-medium text-gray-800">{$userStore.email}</span> ({currentUserRole})
+				</span>
 			{/if}
+
 			<button
 				on:click={handleLogout}
-				class="bg-red-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+				class="bg-red-600 text-white py-2 px-4 rounded-lg shadow hover:bg-red-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
 			>
 				Logout
 			</button>
 		</div>
 	</div>
 
-	<div class="mb-6 flex items-center space-x-4">
+	<!-- Top Buttons -->
+	<div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-8">
 		<button
 			on:click={navigateToCreateIssue}
-			class="bg-green-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+			class="bg-green-600 text-white py-2 px-4 rounded-lg shadow hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
 		>
 			Create New Issue
 		</button>
+
 		{#if currentUserRole === 'ADMIN' || currentUserRole === 'MAINTAINER'}
 			<button
 				on:click={navigateToDashboard}
-				class="bg-blue-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+				class="bg-blue-600 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
 			>
 				View Dashboard
 			</button>
 		{/if}
 	</div>
 
+	<!-- State Handling -->
 	{#if isLoading}
-		<p class="text-center text-gray-700">Loading issues...</p>
+		<p class="text-center text-gray-700 text-base">Loading issues...</p>
+
 	{:else if errorMessage}
-		<p class="text-red-600 text-center">{errorMessage}</p>
+		<p class="text-center text-red-600 text-base">{errorMessage}</p>
+
 	{:else if issues.length === 0}
-		<p class="text-center text-gray-700">No issues found. Create one!</p>
+		<p class="text-center text-gray-700 text-base">No issues found. Create one!</p>
+
 	{:else}
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+		<!-- Issues Grid -->
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 			{#each issues as issue (issue.id)}
 				<a
 					href="/issues/{issue.id}"
-					class="block bg-white p-6 rounded-lg shadow-md border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+					class="block bg-white p-6 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition-all duration-200"
 					aria-label="View details for issue: {issue.title}"
 				>
-					<h2 class="text-xl font-semibold text-gray-900 mb-2">{issue.title}</h2>
+					<h2 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{issue.title}</h2>
+
 					<p class="text-sm text-gray-600 mb-1">
-						Status: <span class="font-medium text-blue-700">{issue.status}</span>
+						<strong class="text-gray-800">Status:</strong> <span class="text-blue-700 font-medium">{issue.status}</span>
 					</p>
+
 					<p class="text-sm text-gray-600 mb-1">
-						Severity: <span class="font-medium text-yellow-700">{issue.severity}</span>
+						<strong class="text-gray-800">Severity:</strong> <span class="text-yellow-700 font-medium">{issue.severity}</span>
 					</p>
+
 					<p class="text-sm text-gray-600 mb-1">
-						Created by: <span class="font-medium text-gray-700">{issue.owner_id}</span>
+						<strong class="text-gray-800">Created by:</strong> {issue.owner_id}
 					</p>
+
 					<p class="text-xs text-gray-500">
-						Created: {new Date(issue.created_at).toLocaleDateString()}
+						Created on: {new Date(issue.created_at).toLocaleDateString()}
 					</p>
 				</a>
 			{/each}
 		</div>
 	{/if}
 </div>
+

@@ -24,13 +24,31 @@
 	}
 </script>
 
-<div class="min-h-screen bg-gray-100 text-gray-900">
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900">
 	{#if $isUserStoreInitialized}
 		<slot />
 	{:else}
-		<!-- Optional: Display a loading spinner or message while user store is initializing -->
-		<div class="flex items-center justify-center min-h-screen">
-			<p class="text-gray-700 text-lg">Loading application...</p>
+		<!-- Enhanced loading state -->
+		<div class="flex flex-col items-center justify-center min-h-screen px-4 text-center">
+			<!-- Spinner -->
+			<svg
+				class="animate-spin h-10 w-10 text-indigo-500 mb-4"
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+			>
+				<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+				<path
+					class="opacity-75"
+					fill="currentColor"
+					d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+				/>
+			</svg>
+
+			<!-- Message -->
+			<p class="text-lg font-medium text-gray-700">Loading application...</p>
+			<p class="text-sm text-gray-500 mt-1">Please wait a moment while we prepare everything for you.</p>
 		</div>
 	{/if}
 </div>
+
