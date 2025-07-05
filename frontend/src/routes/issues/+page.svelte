@@ -34,8 +34,8 @@
 			console.error('Error fetching issues:', error);
 			// If it's an auth error, redirect to login
 			if (
-				(error.message.includes('Authentication required') ||
-					error.message.includes('Could not validate credentials')) &&
+				((error as Error).message.includes('Authentication required') ||
+					(error as Error).message.includes('Could not validate credentials')) &&
 				browser
 			) {
 				logout(); // Clear token and trigger store update which will redirect
