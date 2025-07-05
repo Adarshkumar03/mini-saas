@@ -50,7 +50,7 @@
 		isLoading = true;
 		errorMessage = null;
 		try {
-			const fetchedIssue = await getIssue(issueId) as Issue;
+			const fetchedIssue = (await getIssue(issueId)) as Issue;
 			issue = fetchedIssue;
 			// Initialize editable fields with current issue data
 			if (issue) {
@@ -96,7 +96,7 @@
 		}
 
 		try {
-			const updatedIssue = await updateIssue(issueId, updatedData) as Issue;
+			const updatedIssue = (await updateIssue(issueId, updatedData)) as Issue;
 			issue = updatedIssue; // Update local issue object
 			successMessage = 'Issue updated successfully!';
 			isEditing = false; // Exit edit mode

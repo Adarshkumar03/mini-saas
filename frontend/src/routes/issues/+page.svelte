@@ -27,7 +27,7 @@
 		isLoading = true;
 		errorMessage = null;
 		try {
-			const fetchedIssues = await getIssues() as Issue[]; // Ensure we type the response correctly
+			const fetchedIssues = (await getIssues()) as Issue[]; // Ensure we type the response correctly
 			issues = fetchedIssues;
 		} catch (error: any) {
 			errorMessage = error.message || 'Failed to fetch issues.';
