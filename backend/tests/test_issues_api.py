@@ -95,3 +95,23 @@ def test_delete_issue(test_client: TestClient, reporter_auth_token: str, admin_a
     # 4. Verify the issue is gone
     response = test_client.get(f"/api/v1/issues/{issue_id}", headers=admin_headers)
     assert response.status_code == 404 # Not Found
+    
+def test_get_issue_by_id(test_client: TestClient, reporter_auth_token: str):
+    # Create an issue as the reporter
+    headers = {"Authorization": f"Bearer {reporter_auth_token}"}
+    issue_data = {"title": "Get By ID Test", "severity": "LOW"}
+    response = test_client.post("/api/v1/issues/", json=issue_data, headers=headers)
+    assert response.status_code == 201
+    issue_id = response.json()["id"]
+
+    # Get the issue by ID
+    response = test_client.get(f"/api/v1/issues/{issue_id}", headers=headers)
+    assert response.status_code == 200
+    assert response.json()["id"] == issue_id
+    
+def test_get_issue_by_id_not_found(test_client: TestClient, reporter_auth_token: str):
+    headers = {"Authorization": f"Bearer {reporter_auth_token}"}
+    # Attempt to get an issue that does not exist
+    response = test_client.get("/api/v1/issues/999999", headers=headers)
+    assert response.status_code == 404
+    

@@ -21,3 +21,10 @@ def override_get_db():
     finally:
         if db is not None:
             db.close()
+            
+def create_test_database():
+    """
+    Create the test database tables.
+    This should be called before running tests.
+    """
+    Base.metadata.create_all(bind=engine)
