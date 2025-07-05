@@ -1,6 +1,4 @@
-# backend/main.py
-
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, Response
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 import os
 from dotenv import load_dotenv
 from typing import List, Dict
@@ -27,15 +25,17 @@ from app.websockets import manager
 # Import background tasks
 from app.tasks import aggregate_daily_issue_stats
 
+from app.init_db import init_db
+
 # Python's built-in logging
 import logging
-logger = logging.getLogger(__name__) # Get a logger for this module
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
 
 # Import all models to ensure they are registered with SQLAlchemy's Base
-from app import models # noqa: F401
+from app import models  # noqa: F401
 
 # Initialize APScheduler
 scheduler = AsyncIOScheduler()
@@ -43,19 +43,21 @@ scheduler = AsyncIOScheduler()
 # Lifespan context manager for FastAPI
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    init_db()
     # Configure logging first
     configure_logging()
-    
+
     # Startup event
-    print("Application startup: Starting scheduler...")
-    scheduler.add_job(aggregate_daily_issue_stats, IntervalTrigger(minutes=30), id='daily_issue_stats_job')
+    logger.info("Application startup: Starting scheduler...")
+    scheduler.add_job(aggregate_daily_issue_stats, IntervalTrigger(
+        minutes=30), id='daily_issue_stats_job')
     scheduler.start()
-    print("Scheduler started.")
+    logger.info("Scheduler started.")
     yield
     # Shutdown event
-    print("Application shutdown: Shutting down scheduler...")
+    logger.info("Application shutdown: Shutting down scheduler...")
     scheduler.shutdown()
-    print("Scheduler shut down.")
+    logger.info("Scheduler shut down.")
 
 # Initialize the FastAPI application with lifespan
 app = FastAPI(
@@ -67,11 +69,21 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# --- FIX: Configure CORS middleware FIRST ---
+# --- Define any custom middleware FIRST ---
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.info(
+        f"Request: {request.method} {request.url} - Headers: {dict(request.headers)}")
+    response = await call_next(request)
+    logger.info(
+        f"Response: {request.method} {request.url} - Status: {response.status_code} - Headers: {dict(response.headers)}")
+    return response
+
+# --- Add the CORS middleware LAST so it becomes the outermost layer ---
 origins = [
     "http://localhost",
-    "http://localhost:5173", # Your SvelteKit frontend URL
-    # Add other origins if your frontend will be hosted elsewhere
+    "http://localhost:5173",
+    "http://localhost:3000",  # Your SvelteKit frontend URL
 ]
 
 app.add_middleware(
@@ -81,27 +93,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# --- END FIX ---
 
-# --- TEMPORARY DEBUGGING MIDDLEWARE (now after CORS middleware) ---
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    logger.info(f"Request: {request.method} {request.url} - Headers: {dict(request.headers)}")
-    response = await call_next(request)
-    logger.info(f"Response: {request.method} {request.url} - Status: {response.status_code} - Headers: {dict(response.headers)}")
-    return response
-# --- END TEMPORARY DEBUGGING MIDDLEWARE ---
-
-
-# Include the user router
+# --- Include all your routers AFTER the middleware is configured ---
 app.include_router(users.router)
-# Include the issues router
 app.include_router(issues.router)
-# Include the dashboard router
 app.include_router(dashboard.router)
 
-
-# The get_db dependency is imported from app.database.
+# Example endpoint on the main app
 @app.get("/api/v1/hello")
 async def read_root():
     return {"message": "Hello from FastAPI backend! Welcome to Issues & Insights Tracker."}
@@ -116,9 +114,7 @@ async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         while True:
-            await websocket.receive_text() # Keep the connection alive
-    except WebSocketDisconnect:
+            await websocket.receive_text()  # Keep the connection alive
+    except WebSocketDisconnect as e:
+        logger.warning(f"WebSocket disconnected: {e}")
         manager.disconnect(websocket)
-        print(f"WebSocket error: {e}")
-        manager.disconnect(websocket)
-

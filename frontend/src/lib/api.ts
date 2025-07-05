@@ -1,11 +1,13 @@
 // frontend/src/lib/api.ts
 
+
+
 import type { UserCreate, Token, IssueCreate, IssueUpdate } from './types'; // We'll create types.ts next
 
 // Base URL for your FastAPI backend
 // When running locally with Docker Compose, this will be localhost:8000
 // In production, this would be your deployed backend URL
-const API_BASE_URL = 'http://localhost:8000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_PUBLIC_API_BASE_URL;
 
 // Function to store/retrieve JWT token (e.g., in localStorage)
 // In a real app, you might use more secure storage or SvelteKit's built-in session management

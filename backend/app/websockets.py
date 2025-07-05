@@ -1,31 +1,38 @@
 # backend/app/websockets.py
 
 from fastapi import WebSocket
-from typing import List
+from typing import List, Any, Dict
+import json # <--- Import json
 
 # WebSocket Connection Manager
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: List[WebSocket] = [] # List to hold active WebSocket connections
+        self.active_connections: List[WebSocket] = []
 
     async def connect(self, websocket: WebSocket):
-        await websocket.accept() # Accept the WebSocket connection
-        self.active_connections.append(websocket) # Add to active connections
+        await websocket.accept()
+        self.active_connections.append(websocket)
 
     def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket) # Remove from active connections
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
 
     async def send_personal_message(self, message: str, websocket: WebSocket):
-        await websocket.send_text(message) # Send a message to a specific client
+        await websocket.send_text(message)
 
-    async def broadcast(self, message: str):
+    # === MODIFIED BROADCAST METHOD ===
+    async def broadcast(self, payload: Dict[str, Any]):
         """
-        Broadcasts a message to all active WebSocket connections.
+        Broadcasts a JSON-serialized payload to all active WebSocket connections.
         """
+        # Convert the dictionary payload to a JSON string
+        message = json.dumps(payload)
         for connection in self.active_connections:
             try:
                 await connection.send_text(message)
-            except RuntimeError: # Handle cases where connection might be closing
-                self.disconnect(connection) # Remove broken connection
+            except RuntimeError:
+                # This can happen if a connection is closing.
+                # It's safe to just remove it.
+                self.disconnect(connection)
 
-manager = ConnectionManager() # Create an instance of the ConnectionManager
+manager = ConnectionManager()

@@ -47,7 +47,7 @@ async def create_issue(
         "type": "issue_created",
         "issue": schemas.Issue(**issue_data_for_websocket).model_dump_json()
     }
-    await manager.broadcast(json.dumps(message))
+    await manager.broadcast(message)
 
     return db_issue
 
@@ -176,7 +176,7 @@ async def update_issue(
             "new_status": updated_issue.status.value, # Send enum value as string
             "issue": schemas.Issue(**issue_data_for_websocket).model_dump_json()
         }
-        await manager.broadcast(json.dumps(message))
+        await manager.broadcast(message)
 
     return updated_issue
 
