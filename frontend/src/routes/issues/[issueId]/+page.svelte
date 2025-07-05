@@ -50,14 +50,14 @@
 		isLoading = true;
 		errorMessage = null;
 		try {
-			const fetchedIssue = await getIssue(issueId);
+			const fetchedIssue = await getIssue(issueId) as Issue;
 			issue = fetchedIssue;
 			// Initialize editable fields with current issue data
 			if (issue) {
-				editableTitle = issue.title;
-				editableDescription = issue.description || '';
-				editableSeverity = issue.severity;
-				editableStatus = issue.status;
+				editableTitle = (issue as Issue).title;
+				editableDescription = (issue as Issue).description || '';
+				editableSeverity = (issue as Issue).severity;
+				editableStatus = (issue as Issue).status;
 			}
 		} catch (error: any) {
 			errorMessage = error.message || 'Failed to fetch issue details.';
@@ -96,7 +96,7 @@
 		}
 
 		try {
-			const updatedIssue = await updateIssue(issueId, updatedData);
+			const updatedIssue = await updateIssue(issueId, updatedData) as Issue;
 			issue = updatedIssue; // Update local issue object
 			successMessage = 'Issue updated successfully!';
 			isEditing = false; // Exit edit mode

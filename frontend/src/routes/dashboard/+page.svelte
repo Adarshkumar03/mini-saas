@@ -82,7 +82,7 @@
 		isLoading = true;
 		errorMessage = null;
 		try {
-			const fetchedData = await getDashboardStatusCounts();
+			const fetchedData = await getDashboardStatusCounts() as DashboardData;
 			dashboardData = fetchedData;
 			console.log('Dashboard data fetched from API:', dashboardData); // Debugging log
 

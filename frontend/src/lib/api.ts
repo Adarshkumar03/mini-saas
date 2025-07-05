@@ -1,6 +1,6 @@
 // frontend/src/lib/api.ts
 
-import type { UserCreate, Token, IssueCreate, IssueUpdate } from './types'; // We'll create types.ts next
+import type { UserCreate, Token, IssueCreate, IssueUpdate} from './types'; // We'll create types.ts next
 
 // Base URL for your FastAPI backend
 // When running locally with Docker Compose, this will be localhost:8000
@@ -31,9 +31,9 @@ export function getAccessToken(): string | null {
 async function fetchApi(
 	path: string,
 	method: string = 'GET',
-	body?: any,
+	body?: unknown,
 	requiresAuth: boolean = true
-): Promise<any> {
+): Promise<unknown> {
 	const headers: HeadersInit = {
 		'Content-Type': 'application/json'
 	};
@@ -96,44 +96,44 @@ export async function login(email: string, password: string): Promise<Token> {
 	return token;
 }
 
-export async function register(userData: UserCreate): Promise<any> {
+export async function register(userData: UserCreate): Promise<unknown> {
 	return fetchApi('/users/', 'POST', userData, false);
 }
 
 // --- User API Calls ---
 
-export async function getCurrentUser(): Promise<any> {
+export async function getCurrentUser(): Promise<unknown> {
 	return fetchApi('/users/me/');
 }
 
-export async function getUsers(): Promise<any[]> {
+export async function getUsers(): Promise<unknown> {
 	return fetchApi('/users/');
 }
 
 // --- Issue API Calls ---
 
-export async function createIssue(issueData: IssueCreate): Promise<any> {
+export async function createIssue(issueData: IssueCreate): Promise<unknown> {
 	return fetchApi('/issues/', 'POST', issueData);
 }
 
-export async function getIssues(): Promise<any[]> {
+export async function getIssues(): Promise<unknown> {
 	return fetchApi('/issues/');
 }
 
-export async function getIssue(issueId: number): Promise<any> {
+export async function getIssue(issueId: number): Promise<unknown> {
 	return fetchApi(`/issues/${issueId}`);
 }
 
-export async function updateIssue(issueId: number, issueData: IssueUpdate): Promise<any> {
+export async function updateIssue(issueId: number, issueData: IssueUpdate): Promise<unknown> {
 	return fetchApi(`/issues/${issueId}`, 'PUT', issueData);
 }
 
-export async function deleteIssue(issueId: number): Promise<void> {
+export async function deleteIssue(issueId: number): Promise<unknown> {
 	return fetchApi(`/issues/${issueId}`, 'DELETE');
 }
 
 // --- Dashboard API Calls ---
 
-export async function getDashboardStatusCounts(): Promise<any> {
+export async function getDashboardStatusCounts(): Promise<unknown> {
 	return fetchApi('/dashboard/status_counts');
 }

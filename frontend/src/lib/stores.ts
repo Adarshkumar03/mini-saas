@@ -38,14 +38,14 @@ export async function initializeUserStore() {
 
 	if (token) {
 		try {
-			const user: User = await getCurrentUser(); // Fetch full user details
+			const user: unknown = await getCurrentUser(); // Fetch full user details
 			console.log('initializeUserStore: Fetched current user:', user);
 			userStore.set({
 				isAuthenticated: true,
-				email: user.email,
-				role: user.role,
-				id: user.id,
-				is_active: user.is_active
+				email: (user as User).email,
+				role: (user as User).role,
+				id: (user as User).id,
+				is_active: (user as User).is_active
 			});
 			console.log('initializeUserStore: User store set successfully.');
 		} catch (error) {
