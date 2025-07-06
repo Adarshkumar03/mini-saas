@@ -87,6 +87,8 @@ export async function login(email: string, password: string): Promise<Token> {
 		body: formBody.toString()
 	});
 
+	console.log(API_BASE_URL);
+
 	if (!response.ok) {
 		const errorData = await response.json().catch(() => ({ detail: 'Login failed' }));
 		throw new Error(errorData.detail || 'Login failed');
