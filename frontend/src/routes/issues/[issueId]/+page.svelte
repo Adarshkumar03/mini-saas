@@ -255,7 +255,11 @@
 						></textarea>
 					{:else}
 						<div class="prose max-w-none">
-							{@html renderMarkdown(issue.description)}
+							{#await renderMarkdown(issue.description)}
+								<p class="text-gray-500">Loading description...</p>
+							{:then sanitizedHtml}
+								{@html sanitizedHtml}
+							{/await}
 						</div>
 					{/if}
 				</div>
