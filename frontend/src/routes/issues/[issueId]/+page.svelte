@@ -259,7 +259,7 @@
 							{#await renderMarkdown(issue.description)}
 								<p class="text-gray-500">Loading description...</p>
 							{:then sanitizedHtml}
-								<!-- eslint-disable-next-line svelte/no-html-tag -->
+								<!-- eslint-disable svelte/no-html-tag -->
 								{@html sanitizedHtml}
 							{/await}
 						</div>
