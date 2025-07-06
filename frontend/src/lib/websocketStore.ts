@@ -14,8 +14,13 @@ export function connectWebSocket() {
 		return;
 	}
 
-	const url = 'ws://localhost:8000/ws/issues';
-	ws = new WebSocket(url);
+	const httpUrl = import.meta.env.VITE_PUBLIC_API_BASE_URL;
+	// Replace http with ws and https with wss
+	const wsUrl = httpUrl.replace(/^http/, 'ws');
+	const finalUrl = `${wsUrl.replace('/api/v1', '')}/ws/issues`;
+
+	console.log('Attempting to connect WebSocket to:', finalUrl);
+	ws = new WebSocket(finalUrl);
 
 	ws.onopen = () => {
 		console.log('WebSocket connected successfully.');
