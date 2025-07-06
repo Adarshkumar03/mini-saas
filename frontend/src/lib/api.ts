@@ -57,7 +57,7 @@ async function fetchApi(
 		options.body = JSON.stringify(body);
 	}
 
-	console.log("API_BASE_URL:", API_BASE_URL, "path:", path, "options:", options);
+	console.log('API_BASE_URL:', API_BASE_URL, 'path:', path, 'options:', options);
 
 	const response = await fetch(`${API_BASE_URL}${path}`, options);
 
