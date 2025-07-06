@@ -97,27 +97,27 @@ export async function login(email: string, password: string): Promise<Token> {
 }
 
 export async function register(userData: UserCreate): Promise<unknown> {
-	return fetchApi('/users/', 'POST', userData, false);
+	return fetchApi('/users', 'POST', userData, false);
 }
 
 // --- User API Calls ---
 
 export async function getCurrentUser(): Promise<unknown> {
-	return fetchApi('/users/me/');
+	return fetchApi('/users/me');
 }
 
 export async function getUsers(): Promise<unknown> {
-	return fetchApi('/users/');
+	return fetchApi('/users');
 }
 
 // --- Issue API Calls ---
 
 export async function createIssue(issueData: IssueCreate): Promise<unknown> {
-	return fetchApi('/issues/', 'POST', issueData);
+	return fetchApi('/issues', 'POST', issueData);
 }
 
 export async function getIssues(): Promise<unknown> {
-	return fetchApi('/issues/');
+	return fetchApi('/issues');
 }
 
 export async function getIssue(issueId: number): Promise<unknown> {

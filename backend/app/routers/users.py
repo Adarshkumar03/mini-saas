@@ -43,7 +43,7 @@ async def login_for_access_token(
     logger.info("User logged in successfully", extra={"user_email": user.email, "user_id": user.id})
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.post("/users/", response_model=schemas.User, status_code=status.HTTP_201_CREATED)
+@router.post("/users", response_model=schemas.User, status_code=status.HTTP_201_CREATED)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     """
     Create a new user.
@@ -64,7 +64,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Failed to create user due to a server error.")
 
 
-@router.get("/users/me/", response_model=schemas.User)
+@router.get("/users/me", response_model=schemas.User)
 async def read_users_me(current_user: models.User = Depends(get_current_user)):
     """
     Retrieve information about the current authenticated user.
@@ -72,7 +72,7 @@ async def read_users_me(current_user: models.User = Depends(get_current_user)):
     return current_user
 
 # Protected endpoint: Only ADMINs can read all users
-@router.get("/users/", response_model=List[schemas.User], dependencies=[Depends(require_admin)])
+@router.get("/users", response_model=List[schemas.User], dependencies=[Depends(require_admin)])
 def read_users(
     skip: int = 0,
     limit: int = 100,
