@@ -141,7 +141,8 @@
 	async function renderMarkdown(md: string | undefined): Promise<string> {
 		if (!md) return '';
 		const rawHtml = await marked.parse(md);
-		return DOMPurify.sanitize(rawHtml);
+		const sanitizedHTML = DOMPurify.sanitize(rawHtml);
+		return sanitizedHTML;
 	}
 
 	// Determine if the current user can edit the issue using $userStore directly
@@ -254,7 +255,7 @@
 						></textarea>
 					{:else}
 						<div class="prose max-w-none">
-							{renderMarkdown(issue.description)}
+							{@html renderMarkdown(issue.description)}
 						</div>
 					{/if}
 				</div>
