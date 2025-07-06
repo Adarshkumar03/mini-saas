@@ -27,9 +27,6 @@
 
 	let isEditing = false; // State to toggle edit mode
 
-	// This variable will hold the sanitized HTML for the description
-	let renderedDescription: string = '';
-
 	// Subscribe to userStore primarily for redirection if authentication state changes
 	userStore.subscribe((user) => {
 		if (!user.isAuthenticated && browser) {
@@ -149,15 +146,6 @@
 		return sanitizedHTML;
 	}
 
-	// Reactively update the rendered description whenever the issue changes
-	$: (async () => {
-		if (issue?.description) {
-			renderedDescription = await renderMarkdown(issue.description);
-		} else {
-			renderedDescription = '';
-		}
-	})();
-
 	// Determine if the current user can edit the issue using $userStore directly
 	$: canEdit =
 		$userStore.role === 'ADMIN' ||
@@ -268,8 +256,12 @@
 						></textarea>
 					{:else}
 						<div class="prose max-w-none">
-							<!-- svelte-ignore svelte/no-at-html-tags -->
-							{@html renderedDescription}
+							{#await renderMarkdown(issue.description)}
+								<p class="text-gray-500">Loading description...</p>
+							{:then sanitizedHtml}
+								<!-- svelte-ignore svelte/no-at-html-tags -->
+								{@html sanitizedHtml}
+							{/await}
 						</div>
 					{/if}
 				</div>
