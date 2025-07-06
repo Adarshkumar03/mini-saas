@@ -259,6 +259,7 @@
 							{#await renderMarkdown(issue.description)}
 								<p class="text-gray-500">Loading description...</p>
 							{:then sanitizedHtml}
+								<!-- @ts-ignore -->
 								{@html sanitizedHtml}
 							{/await}
 						</div>
