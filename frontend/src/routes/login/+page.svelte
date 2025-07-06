@@ -1,6 +1,8 @@
 <!-- frontend/src/routes/login/+page.svelte -->
 <script lang="ts">
+	import { goto } from '$app/navigation'; // SvelteKit's navigation module
 	import { initializeUserStore } from '$lib/stores'; // Import initializeUserStore
+	import { login } from '$lib/api';
 
 	let email = '';
 	let password = '';
@@ -13,8 +15,10 @@
 		try {
 			// After successful login, re-initialize the user store
 			// This will fetch the full user details (including role) from the backend
+			await login(email, password);
 			await initializeUserStore();
 			console.log('Login successful, user store initialized, redirecting...');
+			await goto('/');
 		} catch (error: unknown) {
 			errorMessage = (error as Error).message || 'An unexpected error occurred during login.';
 			console.error('Login error:', error);
