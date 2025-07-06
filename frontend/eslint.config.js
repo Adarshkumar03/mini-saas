@@ -36,5 +36,12 @@ export default ts.config(
 				svelteConfig
 			}
 		}
+	},
+	// Add this override to disable the rule for the specific file
+	{
+		files: ['frontend/src/routes/issues/[issueId]/+page.svelte'],
+		rules: {
+			'svelte/no-at-html-tags': 'off'
+		}
 	}
 );

@@ -259,7 +259,6 @@
 							{#await renderMarkdown(issue.description)}
 								<p class="text-gray-500">Loading description...</p>
 							{:then sanitizedHtml}
-								<!-- svelte-ignore svelte/no-unused-svelte-ignore, svelte/no-at-html-tags  -->
 								{@html sanitizedHtml}
 							{/await}
 						</div>
