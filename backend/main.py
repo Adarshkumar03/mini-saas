@@ -83,7 +83,8 @@ async def log_requests(request: Request, call_next):
 origins = [
     "http://localhost",
     "http://localhost:5173",
-    "http://localhost:3000",  # Your SvelteKit frontend URL
+    "http://localhost:3000",# Your SvelteKit frontend URL
+    "https://mini-saas-frontend-latest.onrender.com"
 ]
 
 app.add_middleware(
