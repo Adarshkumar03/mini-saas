@@ -10,7 +10,6 @@ let ws: WebSocket | null = null;
 export function connectWebSocket() {
 	// Prevent multiple connections
 	if (ws && ws.readyState === WebSocket.OPEN) {
-		console.log('WebSocket is already connected.');
 		return;
 	}
 
@@ -19,7 +18,6 @@ export function connectWebSocket() {
 	const wsUrl = httpUrl.replace(/^http/, 'ws');
 	const finalUrl = `${wsUrl.replace('/api/v1', '')}/ws/issues`;
 
-	console.log('Attempting to connect WebSocket to:', finalUrl);
 	ws = new WebSocket(finalUrl);
 
 	ws.onopen = () => {
@@ -29,7 +27,6 @@ export function connectWebSocket() {
 	ws.onmessage = (event) => {
 		try {
 			const data = JSON.parse(event.data);
-			console.log('WebSocket message received:', data);
 			lastMessage.set(data); // Update the store with the new message
 		} catch {
 			console.error('Failed to parse WebSocket message:', event.data);

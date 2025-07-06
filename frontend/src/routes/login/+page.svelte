@@ -17,7 +17,6 @@
 			// This will fetch the full user details (including role) from the backend
 			await login(email, password);
 			await initializeUserStore();
-			console.log('Login successful, user store initialized, redirecting...');
 			await goto('/');
 		} catch (error: unknown) {
 			errorMessage = (error as Error).message || 'An unexpected error occurred during login.';

@@ -46,8 +46,6 @@
 		try {
 			const registeredUser = await register(newUserData);
 			successMessage = `Registration successful for ${(registeredUser as User).email}! You can now log in.`;
-			console.log('User registered:', registeredUser);
-			// Optionally, redirect to login page after a short delay
 			setTimeout(() => {
 				goto('/login');
 			}, 2000);

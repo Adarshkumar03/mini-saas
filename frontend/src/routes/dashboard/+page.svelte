@@ -84,14 +84,11 @@
 		try {
 			const fetchedData = (await getDashboardStatusCounts()) as DashboardData;
 			dashboardData = fetchedData;
-			console.log('Dashboard data fetched from API:', dashboardData); // Debugging log
 
 			// Update chart data
 			if (dashboardData && dashboardData.status_counts) {
 				chartConfig.data.labels = Object.keys(dashboardData.status_counts) as IssueStatus[];
 				chartConfig.data.datasets[0].data = Object.values(dashboardData.status_counts);
-				console.log('Chart labels prepared:', chartConfig.data.labels); // Debugging log
-				console.log('Chart data prepared:', chartConfig.data.datasets[0].data); // Debugging log
 			}
 		} catch (error: unknown) {
 			errorMessage = (error as Error).message || 'Failed to fetch dashboard data.';
@@ -117,10 +114,8 @@
 		if (chartInstance) {
 			chartInstance.data = chartConfig.data;
 			chartInstance.update();
-			console.log('Chart instance updated.'); // Debugging log
 		} else {
 			chartInstance = new Chart(chartCanvas, chartConfig);
-			console.log('New Chart instance created.'); // Debugging log
 		}
 	}
 
@@ -128,7 +123,6 @@
 	onDestroy(() => {
 		if (chartInstance) {
 			chartInstance.destroy();
-			console.log('Chart instance destroyed on component unmount.'); // Debugging log
 		}
 	});
 

@@ -59,7 +59,6 @@
 	// React to new messages from the WebSocket
 	// This reactive block runs whenever the '$lastMessage' store value changes
 	$: if ($lastMessage) {
-		console.log('Real-time update received, refreshing issues...', $lastMessage);
 		fetchIssues();
 	}
 

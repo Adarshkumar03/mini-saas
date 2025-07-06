@@ -36,7 +36,6 @@
 		try {
 			const createdIssue = await createIssue(newIssue);
 			successMessage = `Issue "${(createdIssue as Issue).title}" created successfully!`;
-			console.log('Issue created:', createdIssue);
 			// Optionally, clear form or redirect after a short delay
 			setTimeout(() => {
 				goto('/issues'); // Redirect back to the issues list

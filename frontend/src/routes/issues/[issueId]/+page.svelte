@@ -100,7 +100,6 @@
 			issue = updatedIssue; // Update local issue object
 			successMessage = 'Issue updated successfully!';
 			isEditing = false; // Exit edit mode
-			console.log('Issue updated:', updatedIssue);
 		} catch (error: unknown) {
 			errorMessage = (error as Error).message || 'Failed to update issue.';
 			console.error('Error updating issue:', error);
@@ -123,7 +122,6 @@
 		try {
 			await deleteIssue(issueId);
 			successMessage = 'Issue deleted successfully!';
-			console.log('Issue deleted:', issueId);
 			setTimeout(() => {
 				goto('/issues'); // Redirect to issues list after deletion
 			}, 1000);
