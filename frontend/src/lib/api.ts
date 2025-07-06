@@ -57,6 +57,8 @@ async function fetchApi(
 		options.body = JSON.stringify(body);
 	}
 
+	console.log(API_BASE_URL, path, options);
+
 	const response = await fetch(`${API_BASE_URL}${path}`, options);
 
 	if (!response.ok) {
@@ -86,8 +88,6 @@ export async function login(email: string, password: string): Promise<Token> {
 		},
 		body: formBody.toString()
 	});
-
-	console.log(API_BASE_URL);
 
 	if (!response.ok) {
 		const errorData = await response.json().catch(() => ({ detail: 'Login failed' }));
