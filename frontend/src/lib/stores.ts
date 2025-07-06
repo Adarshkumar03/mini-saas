@@ -58,7 +58,6 @@ export async function initializeUserStore() {
 
 // Function to log out the user
 export function logout() {
-	console.log('logout: Logging out user...');
 	localStorage.removeItem('accessToken');
 	userStore.set(initialUserState);
 
