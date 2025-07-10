@@ -19,8 +19,6 @@ def aggregate_daily_issue_stats():
     db: Session = SessionLocal() # Get a new database session for the task
     try:
         # Get today's date (or yesterday's if running late at night for previous day's stats)
-        # For simplicity, let's aggregate for the current day when the task runs.
-        # In a real-world scenario, you might aggregate for the *previous* day.
         today = datetime.utcnow().date()
 
         # Check if stats for today already exist to prevent duplicates
