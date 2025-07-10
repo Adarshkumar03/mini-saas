@@ -17,7 +17,3 @@
 
 <h1 class="text-3xl font-bold text-center my-8">Welcome to Issues & Insights Tracker</h1>
 <p class="text-center text-lg text-gray-700">Redirecting...</p>
-
-<style>
-	/* You can add component-specific styles here if needed */
-</style>
