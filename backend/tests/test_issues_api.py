@@ -1,7 +1,7 @@
 # backend/tests/test_issues_api.py
 
 from fastapi.testclient import TestClient
-from main import app # Use the main app instance
+from main import app
 from tests.main_test import client, override_get_db # Use the test client and DB override
 from app import schemas, crud
 from sqlalchemy.orm import Session

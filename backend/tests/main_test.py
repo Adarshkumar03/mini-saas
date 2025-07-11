@@ -9,7 +9,6 @@ app.dependency_overrides[get_db] = override_get_db
 
 # Create and drop the test database tables for each test run
 Base.metadata.create_all(bind=test_engine)
-# You might need a teardown strategy for more complex tests
 
 # Create a TestClient
 client = TestClient(app)

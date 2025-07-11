@@ -15,8 +15,6 @@ def test_create_and_get_user(db_session: Session):
     assert retrieved_user is not None
     assert str(retrieved_user.email) == str(db_user.email)
 
-    # db.close()  # Remove or replace with db_session.close() if needed
-
 def test_create_and_get_issue(db_session: Session):
     # First, create a user to be the owner of the issue
     user_in = schemas.UserCreate(email="issue.owner@example.com", password="password")

@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String, Boolean, Enum, ForeignKey, DateT
 from sqlalchemy.orm import relationship
 # Import Base from the new database module
 from .database import Base
-import enum # Import enum for Python Enum type
+import enum
 from datetime import datetime
 
 # Define UserRole Enum
@@ -75,10 +75,7 @@ class Issue(Base):
 
     # Foreign key to link to the User who created the issue
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    # CORRECTED: back_populates should refer to the name of the relationship on the User model
     owner = relationship("User", back_populates="issues")
-
-    # TODO: Add file_path for optional file upload later
 
     def __repr__(self):
         """

@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.database import Base # Use the same models
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db" # Use an in-memory SQLite DB for tests
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}

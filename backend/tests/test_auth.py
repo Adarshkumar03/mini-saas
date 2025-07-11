@@ -1,5 +1,5 @@
 # backend/tests/test_auth.py
-from app.auth import create_access_token # Adjust import path
+from app.auth import create_access_token
 from datetime import timedelta
 
 def test_create_access_token():

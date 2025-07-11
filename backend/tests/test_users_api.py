@@ -16,7 +16,6 @@ def test_read_users_permissions(
     response = test_client.get("/api/v1/users/", headers=admin_headers)
     assert response.status_code == 200
 
-    # Ensure the response contains a list of users
     # We expect at least the admin user we created in the fixture
     user_list = response.json()
     assert isinstance(user_list, list)
@@ -157,7 +156,6 @@ def test_get_current_user(
     test_client: TestClient,
     reporter_auth_token: str
 ):
-    # 1. Get the current user as a REPORTER (should succeed)
     headers = {"Authorization": f"Bearer {reporter_auth_token}"}
     response = test_client.get("/api/v1/users/me/", headers=headers)
     assert response.status_code == 200
