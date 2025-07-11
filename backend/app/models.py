@@ -48,7 +48,7 @@ class IssueStatus(str, enum.Enum):
     IN_PROGRESS = "IN_PROGRESS"
     DONE = "DONE"
 
-# Define IssueSeverity Enum
+
 class IssueSeverity(str, enum.Enum):
     """
     Defines the possible severity levels for an issue.
